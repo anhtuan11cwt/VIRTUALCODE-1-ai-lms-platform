@@ -2,6 +2,7 @@ import { ZodError } from "zod";
 import uploadOnCloudinary, {
   deleteFromCloudinary,
 } from "../config/cloudinary.js";
+import Course from "../models/Course.js";
 import User from "../models/User.js";
 import { updateProfileSchema } from "../utils/zodSchemas.js";
 
@@ -57,6 +58,26 @@ export const updateProfile = async (req, res) => {
         success: false,
       });
     }
+    res.status(500).json({ message: "Lỗi máy chủ", success: false });
+  }
+};
+
+export const getEnrolledCourses = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "Người dùng không tồn tại", success: false });
+    }
+
+    const courses = await Course.find({
+      _id: { $in: user.enrolledCourses },
+    }).populate("creator", "name photoUrl");
+
+    res.json({ courses, success: true });
+  } catch {
     res.status(500).json({ message: "Lỗi máy chủ", success: false });
   }
 };
