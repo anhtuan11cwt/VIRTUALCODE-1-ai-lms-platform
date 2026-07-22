@@ -1,6 +1,7 @@
 {
   "author": "Trần Anh Tuấn",
   "dependencies": {
+    "@google/genai": "^2.13.0",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",

@@ -5,9 +5,11 @@ import express from "express";
 import swaggerUi from "swagger-ui-express";
 import connectDB from "./config/connectDB.js";
 import swaggerSpec from "./config/swagger.js";
+import aiRoutes from "./routes/aiRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
 import orderRoutes from "./routes/paymentRoute.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
 connectDB();
@@ -34,6 +36,8 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/review", reviewRoutes);
+app.use("/api/v1/ai", aiRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server đang chạy tại: http://localhost:${PORT}`);

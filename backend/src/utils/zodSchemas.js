@@ -147,6 +147,26 @@ export const editLectureSchema = z.object({
   lectureTitle: lectureTitleSchema.optional(),
 });
 
+export const aiSearchSchema = z.object({
+  query: z
+    .string({ required_error: "Vui lòng nhập câu hỏi" })
+    .trim()
+    .min(1, "Vui lòng nhập câu hỏi"),
+});
+
+export const createReviewSchema = z.object({
+  comment: z.string().trim().optional().default(""),
+  courseId: z
+    .string({ required_error: "ID khóa học là bắt buộc" })
+    .trim()
+    .min(1, "ID khóa học là bắt buộc"),
+  rating: z
+    .number({ required_error: "Đánh giá là bắt buộc" })
+    .int("Đánh giá phải là số nguyên")
+    .min(1, "Đánh giá tối thiểu là 1 sao")
+    .max(5, "Đánh giá tối đa là 5 sao"),
+});
+
 export const editCourseSchema = z.object({
   category: courseCategoryEnum.optional(),
   description: z.string().trim().optional(),
