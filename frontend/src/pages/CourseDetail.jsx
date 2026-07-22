@@ -1,18 +1,39 @@
-import { BookOpen, Lock, Play, Star, User } from "lucide-react";
+import {
+  BookOpen,
+  GraduationCap,
+  Lock,
+  Play,
+  ShoppingCart,
+  Star,
+  User,
+} from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useSearchParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import Card from "../components/Card";
+import { setUser } from "../redux/userSlice";
 import api from "../services/api";
 
 const CourseDetail = () => {
   const { id } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const userData = useSelector((state) => state.user.userData);
+  const dispatch = useDispatch();
   const [course, setCourse] = useState(null);
   const [lectures, setLectures] = useState([]);
   const [otherCourses, setOtherCourses] = useState([]);
   const [selectedLecture, setSelectedLecture] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [locallyEnrolled, setLocallyEnrolled] = useState(false);
+  const [enrolling, setEnrolling] = useState(false);
 
+  // isEnrolled = Redux data (ưu tiên) HOẶC trạng thái local sau khi thanh toán
+  const enrolledFromRedux = userData?.enrolledCourses?.includes(id) ?? false;
+  const isEnrolled = enrolledFromRedux || locallyEnrolled;
+
+  // Load khóa học — chỉ chạy 1 lần theo id
   useEffect(() => {
     const load = async () => {
       setLoading(true);
@@ -44,6 +65,82 @@ const CourseDetail = () => {
     };
     load();
   }, [id]);
+
+  // Xử lý redirect từ Stripe Checkout
+  useEffect(() => {
+    const sessionId = searchParams.get("session_id");
+    if (!sessionId || !userData) return;
+
+    // Xoá session_id khỏi URL ngay lập tức — tránh loop
+    setSearchParams({});
+
+    const verify = async () => {
+      try {
+        const { data } = await api.post("/order/verify-payment", {
+          courseId: id,
+          sessionId,
+        });
+        if (data.success) {
+          setLocallyEnrolled(true);
+          dispatch(
+            setUser({
+              ...userData,
+              enrolledCourses: data.user.enrolledCourses,
+            }),
+          );
+          toast.success("Ghi danh thành công!");
+        }
+      } catch {
+        toast.error("Thanh toán thất bại, vui lòng thử lại");
+      }
+    };
+    verify();
+  }, [
+    searchParams,
+    id,
+    userData, // Xoá session_id khỏi URL ngay lập tức — tránh loop
+    setSearchParams,
+    dispatch,
+  ]);
+
+  const handleEnroll = async () => {
+    setEnrolling(true);
+    try {
+      const { data } = await api.post("/order/create-checkout-session", {
+        courseId: id,
+      });
+      if (data.sessionUrl) {
+        window.location.href = data.sessionUrl;
+      }
+    } catch {
+      // Xử lý lỗi
+    } finally {
+      setEnrolling(false);
+    }
+  };
+
+  const handleFreeEnroll = async () => {
+    setEnrolling(true);
+    try {
+      const { data } = await api.post("/order/free-enroll", {
+        courseId: id,
+      });
+      if (data.success) {
+        setLocallyEnrolled(true);
+        dispatch(
+          setUser({
+            ...userData,
+            enrolledCourses: data.user.enrolledCourses,
+          }),
+        );
+        toast.success("Ghi danh thành công!");
+      }
+    } catch {
+      toast.error("Ghi danh thất bại");
+    } finally {
+      setEnrolling(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -210,6 +307,64 @@ const CourseDetail = () => {
                     ? `${course.price.toLocaleString()}₫`
                     : "Miễn phí"}
                 </p>
+
+                {userData &&
+                  course.price > 0 &&
+                  !isEnrolled &&
+                  userData?.id !== creator?._id && (
+                    <button
+                      className="mt-4 w-full rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+                      disabled={enrolling}
+                      onClick={handleEnroll}
+                      type="button"
+                    >
+                      {enrolling ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <ClipLoader color="#fff" size={18} />
+                          Đang xử lý…
+                        </span>
+                      ) : (
+                        <span className="flex items-center justify-center gap-2">
+                          <ShoppingCart size={18} />
+                          Đăng ký ngay
+                        </span>
+                      )}
+                    </button>
+                  )}
+
+                {userData &&
+                  course.price === 0 &&
+                  !isEnrolled &&
+                  userData?.id !== creator?._id && (
+                    <button
+                      className="mt-4 w-full rounded-xl bg-blue-600 px-6 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:opacity-50"
+                      disabled={enrolling}
+                      onClick={handleFreeEnroll}
+                      type="button"
+                    >
+                      {enrolling ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <ClipLoader color="#fff" size={18} />
+                          Đang xử lý…
+                        </span>
+                      ) : (
+                        <span className="flex items-center justify-center gap-2">
+                          <GraduationCap size={18} />
+                          Đăng ký miễn phí
+                        </span>
+                      )}
+                    </button>
+                  )}
+
+                {isEnrolled && (
+                  <button
+                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 font-semibold text-white transition hover:bg-emerald-700"
+                    type="button"
+                  >
+                    <Play size={18} />
+                    Xem ngay
+                  </button>
+                )}
               </div>
 
               <div className="mt-6">
