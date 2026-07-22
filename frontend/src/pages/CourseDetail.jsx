@@ -10,7 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import Card from "../components/Card";
 import { setUser } from "../redux/userSlice";
@@ -19,6 +19,7 @@ import api from "../services/api";
 const CourseDetail = () => {
   const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const userData = useSelector((state) => state.user.userData);
   const dispatch = useDispatch();
   const [course, setCourse] = useState(null);
@@ -359,6 +360,7 @@ const CourseDetail = () => {
                 {isEnrolled && (
                   <button
                     className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 font-semibold text-white transition hover:bg-emerald-700"
+                    onClick={() => navigate(`/course/${course._id}/lectures`)}
                     type="button"
                   >
                     <Play size={18} />

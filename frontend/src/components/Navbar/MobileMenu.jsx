@@ -1,4 +1,11 @@
-import { LayoutDashboard, LogIn, LogOut, UserPlus, X } from "lucide-react";
+import {
+  BookOpen,
+  LayoutDashboard,
+  LogIn,
+  LogOut,
+  UserPlus,
+  X,
+} from "lucide-react";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -76,6 +83,13 @@ const MobileMenu = ({ isOpen, onClose }) => {
           <NavLink className={linkClass} onClick={onClose} to="/courses">
             Khóa học
           </NavLink>
+
+          {userData && (
+            <NavLink className={linkClass} onClick={onClose} to="/my-courses">
+              <BookOpen size={18} />
+              Khóa học của tôi
+            </NavLink>
+          )}
 
           {userData?.role === "educator" && (
             <NavLink className={linkClass} onClick={onClose} to="/dashboard">

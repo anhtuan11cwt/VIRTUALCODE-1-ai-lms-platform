@@ -1,4 +1,4 @@
-import { LayoutDashboard, LogIn, Menu, UserPlus } from "lucide-react";
+import { BookOpen, LayoutDashboard, LogIn, Menu, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
@@ -35,6 +35,14 @@ const Nav = ({ isChecking }) => {
               <NavLink className={linkClass} to="/courses">
                 Khóa học
               </NavLink>
+              {userData && (
+                <NavLink className={linkClass} to="/my-courses">
+                  <span className="flex items-center gap-1.5">
+                    <BookOpen size={16} />
+                    Khóa học của tôi
+                  </span>
+                </NavLink>
+              )}
               {userData?.role === "educator" && (
                 <NavLink className={linkClass} to="/dashboard">
                   <span className="flex items-center gap-1.5">

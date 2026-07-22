@@ -16,9 +16,11 @@ import EditProfile from "./pages/EditProfile";
 import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import MyEnrolledCourses from "./pages/MyEnrolledCourses";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
+import ViewLectures from "./pages/ViewLectures";
 
 function App() {
   const isChecking = useCurrentUser();
@@ -53,6 +55,14 @@ function App() {
           path="/forgot-password"
         />
         <Route element={<Courses />} path="/courses" />
+        <Route
+          element={
+            <ProtectedRoute isChecking={isChecking}>
+              <ViewLectures />
+            </ProtectedRoute>
+          }
+          path="/course/:courseId/lectures"
+        />
         <Route element={<CourseDetail />} path="/course/:id" />
         <Route
           element={
@@ -93,6 +103,14 @@ function App() {
             </ProtectedRoute>
           }
           path="/dashboard/edit-course/:courseId/lecture/:lectureId"
+        />
+        <Route
+          element={
+            <ProtectedRoute isChecking={isChecking}>
+              <MyEnrolledCourses />
+            </ProtectedRoute>
+          }
+          path="/my-courses"
         />
         <Route
           element={
