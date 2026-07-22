@@ -88,7 +88,6 @@ const OTPStep = ({ email, loading, onVerify, onResend }) => {
               } ${loading || expired ? "opacity-50" : ""}`}
               disabled={loading || expired}
               inputMode="numeric"
-              // biome-ignore lint/suspicious/noArrayIndexKey: fixed 6-position OTP inputs, never reordered
               key={index}
               maxLength={1}
               onChange={(e) => handleChange(index, e.target.value)}

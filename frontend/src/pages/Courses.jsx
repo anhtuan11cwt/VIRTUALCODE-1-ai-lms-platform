@@ -116,7 +116,6 @@ const Courses = () => {
                 {[...Array(6)].map((_, i) => (
                   <div
                     className="overflow-hidden rounded-2xl border border-gray-100 bg-white"
-                    // biome-ignore lint/suspicious/noArrayIndexKey: static 6 skeleton items, never reordered
                     key={i}
                   >
                     <div className="aspect-video animate-pulse bg-gray-200" />

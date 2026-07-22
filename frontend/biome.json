@@ -83,6 +83,9 @@
         "useNumberNamespace": "error",
         "useSelfClosingElements": "error",
         "useSingleVarDeclarator": "error"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off"
       }
     }
   },
