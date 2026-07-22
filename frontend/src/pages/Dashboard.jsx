@@ -4,6 +4,15 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { setCourses, setLoading } from "../redux/courseSlice";
 import api from "../services/api";
 
@@ -89,6 +98,100 @@ const Dashboard = () => {
             </p>
           </div>
         </div>
+
+        {courses.length > 0 && (
+          <div className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+              <h3 className="mb-6 font-semibold text-gray-900">
+                Tiến độ bài học
+              </h3>
+              <ResponsiveContainer height={280} width="100%">
+                <BarChart
+                  data={courses.map((c) => ({
+                    bài_học: c.lectures?.length || 0,
+                    name:
+                      c.title.length > 12
+                        ? `${c.title.slice(0, 12)}...`
+                        : c.title,
+                  }))}
+                  margin={{ bottom: 5, left: -10, right: 10, top: 5 }}
+                >
+                  <CartesianGrid stroke="#f1f5f9" strokeDasharray="3 3" />
+                  <XAxis
+                    axisLine={{ stroke: "#e2e8f0" }}
+                    dataKey="name"
+                    tick={{ fill: "#64748b", fontSize: 11 }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    allowDecimals={false}
+                    axisLine={{ stroke: "#e2e8f0" }}
+                    tick={{ fill: "#64748b", fontSize: 11 }}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      border: "1px solid #e2e8f0",
+                      borderRadius: 8,
+                      fontSize: 13,
+                    }}
+                  />
+                  <Bar
+                    dataKey="bài_học"
+                    fill="#2563eb"
+                    maxBarSize={32}
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+              <h3 className="mb-6 font-semibold text-gray-900">
+                Học viên ghi danh
+              </h3>
+              <ResponsiveContainer height={280} width="100%">
+                <BarChart
+                  data={courses.map((c) => ({
+                    học_viên: c.students?.length || 0,
+                    name:
+                      c.title.length > 12
+                        ? `${c.title.slice(0, 12)}...`
+                        : c.title,
+                  }))}
+                  margin={{ bottom: 5, left: -10, right: 10, top: 5 }}
+                >
+                  <CartesianGrid stroke="#f1f5f9" strokeDasharray="3 3" />
+                  <XAxis
+                    axisLine={{ stroke: "#e2e8f0" }}
+                    dataKey="name"
+                    tick={{ fill: "#64748b", fontSize: 11 }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    allowDecimals={false}
+                    axisLine={{ stroke: "#e2e8f0" }}
+                    tick={{ fill: "#64748b", fontSize: 11 }}
+                    tickLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      border: "1px solid #e2e8f0",
+                      borderRadius: 8,
+                      fontSize: 13,
+                    }}
+                  />
+                  <Bar
+                    dataKey="học_viên"
+                    fill="#10b981"
+                    maxBarSize={32}
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
 
         <div className="mb-6 flex items-center justify-between">
           <h2 className="font-bold text-gray-900 text-lg">Khóa học của tôi</h2>
