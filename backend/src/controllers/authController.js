@@ -24,6 +24,7 @@ export const getCurrentUser = async (req, res) => {
     res.json({
       success: true,
       user: {
+        bio: user.bio,
         email: user.email,
         enrolledCourses: user.enrolledCourses,
         id: user._id,
@@ -67,9 +68,12 @@ export const signup = async (req, res) => {
       message: "Đăng ký thành công",
       success: true,
       user: {
+        bio: user.bio,
         email: user.email,
+        enrolledCourses: user.enrolledCourses,
         id: user._id,
         name: user.name,
+        photoUrl: user.photoUrl,
         role: user.role,
       },
     });
@@ -118,9 +122,12 @@ export const login = async (req, res) => {
       message: "Đăng nhập thành công",
       success: true,
       user: {
+        bio: user.bio,
         email: user.email,
+        enrolledCourses: user.enrolledCourses,
         id: user._id,
         name: user.name,
+        photoUrl: user.photoUrl,
         role: user.role,
       },
     });

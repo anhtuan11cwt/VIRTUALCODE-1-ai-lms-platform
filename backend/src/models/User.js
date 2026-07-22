@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
+    bio: {
+      default: "",
+      type: String,
+    },
     email: {
       lowercase: true,
       required: true,

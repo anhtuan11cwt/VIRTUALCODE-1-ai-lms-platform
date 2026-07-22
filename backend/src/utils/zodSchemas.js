@@ -93,3 +93,21 @@ export const resetPasswordSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
+
+export const updateProfileSchema = z.object({
+  bio: z
+    .string()
+    .trim()
+    .max(300, "Giới thiệu không được quá 300 ký tự")
+    .optional()
+    .default(""),
+  name: z
+    .string({ required_error: "Tên là bắt buộc" })
+    .trim()
+    .min(2, "Tên phải có ít nhất 2 ký tự")
+    .max(100, "Tên phải dưới 100 ký tự")
+    .regex(
+      /^[\p{L}'-]+(?: [\p{L}'-]+)*$/u,
+      "Tên chỉ được chứa chữ cái, dấu gạch ngang, dấu nháy đơn và khoảng trắng",
+    ),
+});
