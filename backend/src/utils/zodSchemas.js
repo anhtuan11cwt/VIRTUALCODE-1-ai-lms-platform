@@ -65,3 +65,14 @@ export const signupSchema = z.object({
     }),
   role: z.enum(["student", "educator"]).default("student"),
 });
+
+export const loginSchema = z.object({
+  email: z
+    .string({ required_error: "Email là bắt buộc" })
+    .trim()
+    .toLowerCase()
+    .email("Định dạng email không hợp lệ"),
+  password: z
+    .string({ required_error: "Mật khẩu là bắt buộc" })
+    .min(1, "Mật khẩu là bắt buộc"),
+});

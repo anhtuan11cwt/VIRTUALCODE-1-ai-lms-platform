@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { signup } from "../controllers/authController.js";
+import { login, logout, signup } from "../controllers/authController.js";
 
 const router = Router();
 
@@ -110,5 +110,97 @@ const router = Router();
  *         description: Lỗi máy chủ
  */
 router.post("/signup", signup);
+
+/**
+ * @openapi
+ * /api/v1/auth/login:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Đăng nhập tài khoản
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: nguyenvanan@example.com
+ *               password:
+ *                 type: string
+ *                 example: Abcd@1234
+ *           example:
+ *             email: nguyenvanan@example.com
+ *             password: Abcd@1234
+ *     responses:
+ *       200:
+ *         description: Đăng nhập thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *             example:
+ *               success: true
+ *               message: "Đăng nhập thành công"
+ *               user:
+ *                 id: "665a1b2c3d4e5f6a7b8c9d0e"
+ *                 name: "Nguyễn Văn An"
+ *                 email: "nguyenvanan@example.com"
+ *                 role: "student"
+ *       400:
+ *         description: Dữ liệu không hợp lệ
+ *       401:
+ *         description: Email hoặc mật khẩu không đúng
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+router.post("/login", login);
+
+/**
+ * @openapi
+ * /api/v1/auth/logout:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Đăng xuất tài khoản
+ *     responses:
+ *       200:
+ *         description: Đăng xuất thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *             example:
+ *               success: true
+ *               message: "Đăng xuất thành công"
+ */
+router.post("/logout", logout);
 
 export default router;

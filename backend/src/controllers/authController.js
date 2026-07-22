@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { ZodError } from "zod";
 import User from "../models/User.js";
 import genToken from "../utils/genToken.js";
-import { signupSchema } from "../utils/zodSchemas.js";
+import { loginSchema, signupSchema } from "../utils/zodSchemas.js";
 
 export const signup = async (req, res) => {
   try {
@@ -54,4 +54,63 @@ export const signup = async (req, res) => {
       success: false,
     });
   }
+};
+
+export const login = async (req, res) => {
+  try {
+    const data = loginSchema.parse(req.body);
+
+    const user = await User.findOne({ email: data.email });
+    if (!user) {
+      return res.status(401).json({
+        message: "Email hoặc mật khẩu không đúng",
+        success: false,
+      });
+    }
+
+    const isMatch = await bcrypt.compare(data.password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({
+        message: "Email hoặc mật khẩu không đúng",
+        success: false,
+      });
+    }
+
+    genToken(user._id, res);
+
+    res.json({
+      message: "Đăng nhập thành công",
+      success: true,
+      user: {
+        email: user.email,
+        id: user._id,
+        name: user.name,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return res.status(400).json({
+        errors: error.errors.map((e) => ({
+          field: e.path.join("."),
+          message: e.message,
+        })),
+        message: "Dữ liệu không hợp lệ",
+        success: false,
+      });
+    }
+
+    res.status(500).json({
+      message: "Lỗi máy chủ",
+      success: false,
+    });
+  }
+};
+
+export const logout = async (_req, res) => {
+  res.clearCookie("token");
+  res.json({
+    message: "Đăng xuất thành công",
+    success: true,
+  });
 };
