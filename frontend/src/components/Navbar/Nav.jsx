@@ -35,6 +35,9 @@ const Nav = ({ isChecking }) => {
               <NavLink className={linkClass} to="/courses">
                 Khóa học
               </NavLink>
+              <NavLink className={linkClass} to="/about">
+                Giới thiệu
+              </NavLink>
               {userData && (
                 <NavLink className={linkClass} to="/my-courses">
                   <span className="flex items-center gap-1.5">

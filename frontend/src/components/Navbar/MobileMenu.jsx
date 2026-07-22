@@ -83,6 +83,9 @@ const MobileMenu = ({ isOpen, onClose }) => {
           <NavLink className={linkClass} onClick={onClose} to="/courses">
             Khóa học
           </NavLink>
+          <NavLink className={linkClass} onClick={onClose} to="/about">
+            Giới thiệu
+          </NavLink>
 
           {userData && (
             <NavLink className={linkClass} onClick={onClose} to="/my-courses">

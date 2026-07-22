@@ -1,10 +1,13 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 
+import Footer from "./components/Footer";
 import GuestRoute from "./components/GuestRoute";
 import Nav from "./components/Navbar/Nav";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ScrollToTop from "./components/ScrollToTop";
 import useCurrentUser from "./hooks/useCurrentUser";
+import About from "./pages/About";
 import CourseDetail from "./pages/CourseDetail";
 import Courses from "./pages/Courses";
 import CreateCourse from "./pages/CreateCourse";
@@ -27,9 +30,11 @@ function App() {
 
   return (
     <>
+      <ScrollToTop />
       <Nav isChecking={isChecking} />
       <Routes>
         <Route element={<Home />} path="/" />
+        <Route element={<About />} path="/about" />
         <Route
           element={
             <GuestRoute isChecking={isChecking}>
@@ -130,6 +135,7 @@ function App() {
         />
         <Route element={<NotFound />} path="*" />
       </Routes>
+      <Footer />
     </>
   );
 }
