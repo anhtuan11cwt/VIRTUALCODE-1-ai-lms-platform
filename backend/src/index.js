@@ -7,6 +7,7 @@ import connectDB from "./config/connectDB.js";
 import swaggerSpec from "./config/swagger.js";
 import authRoutes from "./routes/authRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
+import orderRoutes from "./routes/paymentRoute.js";
 import userRoutes from "./routes/userRoutes.js";
 
 connectDB();
@@ -30,8 +31,9 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/course", courseRoutes);
+app.use("/api/v1/order", orderRoutes);
+app.use("/api/v1/user", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server đang chạy tại: http://localhost:${PORT}`);
