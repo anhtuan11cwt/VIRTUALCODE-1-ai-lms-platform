@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 
+import useCurrentUser from "./hooks/useCurrentUser";
 import CourseDetail from "./pages/CourseDetail";
 import Courses from "./pages/Courses";
 import Dashboard from "./pages/Dashboard";
@@ -11,6 +12,8 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 
 function App() {
+  useCurrentUser();
+
   return (
     <Routes>
       <Route element={<Home />} path="/" />

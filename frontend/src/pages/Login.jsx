@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthButton from "../components/AuthButton";
 import PasswordInput from "../components/PasswordInput";
 import AuthLayout from "../layouts/AuthLayout";
-import { setUserData } from "../redux/userSlice";
+import { setUser } from "../redux/userSlice";
 import { loginUser } from "../services/authService";
 import { loginSchema } from "../validations/authSchema";
 
@@ -44,7 +44,7 @@ const Login = () => {
         email: result.data.email,
         password: result.data.password,
       });
-      dispatch(setUserData(data.user || data));
+      dispatch(setUser(data.user || data));
       toast.success("Chào mừng trở lại!");
       navigate("/");
     } catch (err) {
