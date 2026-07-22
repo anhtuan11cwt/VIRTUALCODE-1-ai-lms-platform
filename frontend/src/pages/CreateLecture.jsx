@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, BookOpen, Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -204,6 +204,18 @@ const CreateLecture = () => {
                         <p className="text-green-600 text-xs">Đã có video</p>
                       )}
                     </div>
+                    <button
+                      className="flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border border-blue-200 px-3 py-1.5 font-medium text-blue-600 text-xs transition hover:bg-blue-50"
+                      onClick={() =>
+                        navigate(
+                          `/dashboard/edit-course/${id}/lecture/${lecture._id}`,
+                        )
+                      }
+                      type="button"
+                    >
+                      <Pencil size={14} />
+                      Sửa
+                    </button>
                     <button
                       className="flex shrink-0 cursor-pointer items-center gap-1 rounded-lg border border-red-200 px-3 py-1.5 font-medium text-red-600 text-xs transition hover:bg-red-50"
                       onClick={() => setDeleteConfirmId(lecture._id)}

@@ -11,6 +11,7 @@ import CreateCourse from "./pages/CreateCourse";
 import CreateLecture from "./pages/CreateLecture";
 import Dashboard from "./pages/Dashboard";
 import EditCourse from "./pages/EditCourse";
+import EditLecture from "./pages/EditLecture";
 import EditProfile from "./pages/EditProfile";
 import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
@@ -84,6 +85,14 @@ function App() {
             </ProtectedRoute>
           }
           path="/dashboard/edit-course/:id/lectures"
+        />
+        <Route
+          element={
+            <ProtectedRoute isChecking={isChecking} requiredRole="educator">
+              <EditLecture />
+            </ProtectedRoute>
+          }
+          path="/dashboard/edit-course/:courseId/lecture/:lectureId"
         />
         <Route
           element={

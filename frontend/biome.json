@@ -54,6 +54,10 @@
   "linter": {
     "enabled": true,
     "rules": {
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useMediaCaption": "off"
+      },
       "correctness": {
         "useExhaustiveDependencies": "info"
       },
