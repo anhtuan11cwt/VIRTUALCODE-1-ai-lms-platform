@@ -4,6 +4,35 @@ import User from "../models/User.js";
 import genToken from "../utils/genToken.js";
 import { loginSchema, signupSchema } from "../utils/zodSchemas.js";
 
+export const getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password");
+    if (!user) {
+      return res.status(401).json({
+        message: "Người dùng không tồn tại",
+        success: false,
+      });
+    }
+
+    res.json({
+      success: true,
+      user: {
+        email: user.email,
+        enrolledCourses: user.enrolledCourses,
+        id: user._id,
+        name: user.name,
+        photoUrl: user.photoUrl,
+        role: user.role,
+      },
+    });
+  } catch {
+    res.status(500).json({
+      message: "Lỗi máy chủ",
+      success: false,
+    });
+  }
+};
+
 export const signup = async (req, res) => {
   try {
     const data = signupSchema.parse(req.body);
