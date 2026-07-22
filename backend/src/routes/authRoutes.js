@@ -3,7 +3,10 @@ import {
   getCurrentUser,
   login,
   logout,
+  resetPassword,
+  sendOTP,
   signup,
+  verifyOTP,
 } from "../controllers/authController.js";
 import isAuth from "../middleware/isAuth.js";
 
@@ -306,5 +309,186 @@ router.post("/logout", logout);
  *                   message: "Token không hợp lệ hoặc đã hết hạn"
  */
 router.get("/current-user", isAuth, getCurrentUser);
+
+/**
+ * @openapi
+ * /api/v1/auth/send-otp:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Gửi mã OTP đặt lại mật khẩu
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: nguyenvanan@example.com
+ *           example:
+ *             email: nguyenvanan@example.com
+ *     responses:
+ *       200:
+ *         description: OTP đã được gửi
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "OTP đã được gửi tới email của bạn"
+ *       400:
+ *         description: Thiếu email
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Email là bắt buộc"
+ *       404:
+ *         description: Email không tồn tại
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Email không tồn tại trong hệ thống"
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+router.post("/send-otp", sendOTP);
+
+/**
+ * @openapi
+ * /api/v1/auth/verify-otp:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Xác minh mã OTP
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - otp
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: nguyenvanan@example.com
+ *               otp:
+ *                 type: string
+ *                 description: Mã OTP 6 chữ số
+ *                 minLength: 6
+ *                 maxLength: 6
+ *                 example: "582194"
+ *           example:
+ *             email: nguyenvanan@example.com
+ *             otp: "582194"
+ *     responses:
+ *       200:
+ *         description: OTP hợp lệ
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "OTP hợp lệ"
+ *       400:
+ *         description: OTP sai hoặc đã hết hạn
+ *         content:
+ *           application/json:
+ *             examples:
+ *               missingFields:
+ *                 summary: Thiếu email hoặc OTP
+ *                 value:
+ *                   success: false
+ *                   message: "Email và OTP là bắt buộc"
+ *               expired:
+ *                 summary: OTP đã hết hạn
+ *                 value:
+ *                   success: false
+ *                   message: "OTP đã hết hạn, vui lòng gửi lại"
+ *               wrong:
+ *                 summary: OTP không chính xác
+ *                 value:
+ *                   success: false
+ *                   message: "OTP không chính xác"
+ *               notRequested:
+ *                 summary: Chưa yêu cầu OTP
+ *                 value:
+ *                   success: false
+ *                   message: "Vui lòng yêu cầu mã OTP trước"
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+router.post("/verify-otp", verifyOTP);
+
+/**
+ * @openapi
+ * /api/v1/auth/reset-password:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Đặt lại mật khẩu sau khi xác minh OTP
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: nguyenvanan@example.com
+ *               password:
+ *                 type: string
+ *                 description: Tối thiểu 8 ký tự
+ *                 minLength: 8
+ *                 example: MatKhau@2026
+ *           example:
+ *             email: nguyenvanan@example.com
+ *             password: MatKhau@2026
+ *     responses:
+ *       200:
+ *         description: Đặt lại mật khẩu thành công
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               message: "Đặt lại mật khẩu thành công"
+ *       400:
+ *         description: Thiếu email, mật khẩu hoặc mật khẩu quá ngắn
+ *         content:
+ *           application/json:
+ *             examples:
+ *               missingFields:
+ *                 summary: Thiếu email hoặc mật khẩu
+ *                 value:
+ *                   success: false
+ *                   message: "Email và mật khẩu là bắt buộc"
+ *               tooShort:
+ *                 summary: Mật khẩu quá ngắn
+ *                 value:
+ *                   success: false
+ *                   message: "Mật khẩu phải có ít nhất 8 ký tự"
+ *       404:
+ *         description: Người dùng không tồn tại
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: "Người dùng không tồn tại"
+ *       500:
+ *         description: Lỗi máy chủ
+ */
+router.post("/reset-password", resetPassword);
 
 export default router;

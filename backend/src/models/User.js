@@ -28,6 +28,14 @@ const userSchema = new mongoose.Schema(
       default: "",
       type: String,
     },
+    resetOtp: {
+      default: null,
+      type: String,
+    },
+    resetOtpExpireAt: {
+      default: null,
+      type: Date,
+    },
     role: {
       default: "student",
       enum: ["student", "educator"],
