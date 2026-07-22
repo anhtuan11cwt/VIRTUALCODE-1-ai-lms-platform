@@ -193,3 +193,11 @@ export const forgotPasswordResetSchema = z
       });
     }
   });
+
+export const createLectureSchema = z.object({
+  lectureTitle: z
+    .string({ required_error: "Vui lòng nhập tiêu đề bài học" })
+    .trim()
+    .min(1, "Tiêu đề bài học là bắt buộc")
+    .max(200, "Tiêu đề bài học không được quá 200 ký tự"),
+});

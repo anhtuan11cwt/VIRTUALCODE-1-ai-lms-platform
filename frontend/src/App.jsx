@@ -8,6 +8,7 @@ import useCurrentUser from "./hooks/useCurrentUser";
 import CourseDetail from "./pages/CourseDetail";
 import Courses from "./pages/Courses";
 import CreateCourse from "./pages/CreateCourse";
+import CreateLecture from "./pages/CreateLecture";
 import Dashboard from "./pages/Dashboard";
 import EditCourse from "./pages/EditCourse";
 import EditProfile from "./pages/EditProfile";
@@ -75,6 +76,14 @@ function App() {
             </ProtectedRoute>
           }
           path="/dashboard/edit-course/:id"
+        />
+        <Route
+          element={
+            <ProtectedRoute isChecking={isChecking} requiredRole="educator">
+              <CreateLecture />
+            </ProtectedRoute>
+          }
+          path="/dashboard/edit-course/:id/lectures"
         />
         <Route
           element={

@@ -1,6 +1,7 @@
 import {
   AlertTriangle,
   ArrowLeft,
+  BookOpen,
   Camera,
   Globe,
   Save,
@@ -382,6 +383,15 @@ const EditCourse = () => {
                 {status === "Published" ? "Gỡ xuất bản" : "Xuất bản khóa học"}
               </button>
             </div>
+
+            <button
+              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-blue-600 bg-white px-4 py-2.5 font-semibold text-blue-600 text-sm transition hover:bg-blue-50"
+              onClick={() => navigate(`/dashboard/edit-course/${id}/lectures`)}
+              type="button"
+            >
+              <BookOpen size={18} />
+              Quản lý bài học
+            </button>
 
             {!deleteConfirm ? (
               <button
