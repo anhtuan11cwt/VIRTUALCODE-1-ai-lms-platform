@@ -130,6 +130,51 @@ export const updateProfileSchema = z.object({
     ),
 });
 
+export const createCourseSchema = z.object({
+  category: z
+    .string({ required_error: "Vui lòng chọn danh mục" })
+    .trim()
+    .min(1, "Vui lòng chọn danh mục"),
+  title: z
+    .string({ required_error: "Vui lòng nhập tiêu đề" })
+    .trim()
+    .min(1, "Vui lòng nhập tiêu đề")
+    .max(200, "Tiêu đề không được quá 200 ký tự"),
+});
+
+const courseLevelEnum = z.enum(["Beginner", "Intermediate", "Advanced"]);
+
+export const editCourseSchema = z.object({
+  category: z
+    .string({ required_error: "Vui lòng chọn danh mục" })
+    .trim()
+    .min(1, "Vui lòng chọn danh mục"),
+  description: z.string().trim().optional(),
+  level: courseLevelEnum,
+  price: z
+    .string()
+    .transform((v) => {
+      if (!v || v.trim() === "") return 0;
+      const n = Number(v);
+      return Number.isNaN(n) ? 0 : n;
+    })
+    .pipe(
+      z.number().refine((n) => n === 0 || n >= 15000, {
+        message: "Giá tối thiểu là 15,000₫ (hoặc để trống nếu miễn phí)",
+      }),
+    ),
+  subtitle: z
+    .string()
+    .trim()
+    .max(300, "Phụ đề không được quá 300 ký tự")
+    .optional(),
+  title: z
+    .string({ required_error: "Vui lòng nhập tiêu đề" })
+    .trim()
+    .min(1, "Tiêu đề không được để trống")
+    .max(200, "Tiêu đề không được quá 200 ký tự"),
+});
+
 export const forgotPasswordResetSchema = z
   .object({
     confirmPassword: z.string({
