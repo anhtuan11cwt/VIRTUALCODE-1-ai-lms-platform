@@ -1,6 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 
+import GuestRoute from "./components/GuestRoute";
+import Nav from "./components/Navbar/Nav";
+import ProtectedRoute from "./components/ProtectedRoute";
 import useCurrentUser from "./hooks/useCurrentUser";
 import CourseDetail from "./pages/CourseDetail";
 import Courses from "./pages/Courses";
@@ -12,19 +15,50 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 
 function App() {
-  useCurrentUser();
+  const isChecking = useCurrentUser();
 
   return (
-    <Routes>
-      <Route element={<Home />} path="/" />
-      <Route element={<Login />} path="/login" />
-      <Route element={<Register />} path="/register" />
-      <Route element={<Courses />} path="/courses" />
-      <Route element={<CourseDetail />} path="/course/:id" />
-      <Route element={<Dashboard />} path="/dashboard/*" />
-      <Route element={<Profile />} path="/profile" />
-      <Route element={<NotFound />} path="*" />
-    </Routes>
+    <>
+      <Nav isChecking={isChecking} />
+      <Routes>
+        <Route element={<Home />} path="/" />
+        <Route
+          element={
+            <GuestRoute isChecking={isChecking}>
+              <Login />
+            </GuestRoute>
+          }
+          path="/login"
+        />
+        <Route
+          element={
+            <GuestRoute isChecking={isChecking}>
+              <Register />
+            </GuestRoute>
+          }
+          path="/register"
+        />
+        <Route element={<Courses />} path="/courses" />
+        <Route element={<CourseDetail />} path="/course/:id" />
+        <Route
+          element={
+            <ProtectedRoute requiredRole="educator">
+              <Dashboard />
+            </ProtectedRoute>
+          }
+          path="/dashboard/*"
+        />
+        <Route
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+          path="/profile"
+        />
+        <Route element={<NotFound />} path="*" />
+      </Routes>
+    </>
   );
 }
 
