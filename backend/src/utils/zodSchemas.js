@@ -111,3 +111,46 @@ export const updateProfileSchema = z.object({
       "Tên chỉ được chứa chữ cái, dấu gạch ngang, dấu nháy đơn và khoảng trắng",
     ),
 });
+
+const courseLevelEnum = z.enum(["Beginner", "Intermediate", "Advanced"]);
+const courseCategoryEnum = z
+  .string({ required_error: "Danh mục là bắt buộc" })
+  .trim()
+  .min(1, "Danh mục là bắt buộc");
+
+export const createCourseSchema = z.object({
+  category: courseCategoryEnum,
+  title: z
+    .string({ required_error: "Tiêu đề là bắt buộc" })
+    .trim()
+    .min(1, "Tiêu đề là bắt buộc")
+    .max(200, "Tiêu đề không được quá 200 ký tự"),
+});
+
+export const editCourseSchema = z.object({
+  category: courseCategoryEnum.optional(),
+  description: z.string().trim().optional(),
+  level: courseLevelEnum.optional(),
+  price: z
+    .union([
+      z.number().min(15000, "Giá tối thiểu là 15,000₫"),
+      z.string().transform((v) => {
+        const n = Number(v);
+        if (Number.isNaN(n)) throw new Error("Giá không hợp lệ");
+        return n;
+      }),
+    ])
+    .optional(),
+  status: z.enum(["Draft", "Published"]).optional(),
+  subtitle: z
+    .string()
+    .trim()
+    .max(300, "Phụ đề không được quá 300 ký tự")
+    .optional(),
+  title: z
+    .string()
+    .trim()
+    .min(1, "Tiêu đề không được để trống")
+    .max(200, "Tiêu đề không được quá 200 ký tự")
+    .optional(),
+});
