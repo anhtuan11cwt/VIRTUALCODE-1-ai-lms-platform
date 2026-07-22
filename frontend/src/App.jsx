@@ -8,6 +8,7 @@ import useCurrentUser from "./hooks/useCurrentUser";
 import CourseDetail from "./pages/CourseDetail";
 import Courses from "./pages/Courses";
 import Dashboard from "./pages/Dashboard";
+import EditProfile from "./pages/EditProfile";
 import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -51,7 +52,7 @@ function App() {
         <Route element={<CourseDetail />} path="/course/:id" />
         <Route
           element={
-            <ProtectedRoute requiredRole="educator">
+            <ProtectedRoute isChecking={isChecking} requiredRole="educator">
               <Dashboard />
             </ProtectedRoute>
           }
@@ -59,11 +60,19 @@ function App() {
         />
         <Route
           element={
-            <ProtectedRoute>
+            <ProtectedRoute isChecking={isChecking}>
               <Profile />
             </ProtectedRoute>
           }
           path="/profile"
+        />
+        <Route
+          element={
+            <ProtectedRoute isChecking={isChecking}>
+              <EditProfile />
+            </ProtectedRoute>
+          }
+          path="/edit-profile"
         />
         <Route element={<NotFound />} path="*" />
       </Routes>

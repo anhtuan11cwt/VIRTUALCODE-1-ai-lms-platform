@@ -112,6 +112,24 @@ export const forgotPasswordOTPSchema = z.object({
     .length(6, "OTP phải có 6 chữ số"),
 });
 
+export const updateProfileSchema = z.object({
+  bio: z
+    .string({ required_error: "Vui lòng nhập giới thiệu" })
+    .trim()
+    .max(300, "Giới thiệu không được quá 300 ký tự")
+    .optional()
+    .default(""),
+  name: z
+    .string({ required_error: "Vui lòng nhập tên" })
+    .trim()
+    .min(2, "Tên phải có ít nhất 2 ký tự")
+    .max(100, "Tên không được quá 100 ký tự")
+    .regex(
+      /^[\p{L}'-]+(?: [\p{L}'-]+)*$/u,
+      "Tên chỉ được chứa chữ cái, dấu gạch ngang, dấu nháy đơn và khoảng trắng",
+    ),
+});
+
 export const forgotPasswordResetSchema = z
   .object({
     confirmPassword: z.string({
