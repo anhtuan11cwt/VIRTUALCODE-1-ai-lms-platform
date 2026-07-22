@@ -8,6 +8,7 @@ import useCurrentUser from "./hooks/useCurrentUser";
 import CourseDetail from "./pages/CourseDetail";
 import Courses from "./pages/Courses";
 import Dashboard from "./pages/Dashboard";
+import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
@@ -37,6 +38,14 @@ function App() {
             </GuestRoute>
           }
           path="/register"
+        />
+        <Route
+          element={
+            <GuestRoute isChecking={isChecking}>
+              <ForgotPassword />
+            </GuestRoute>
+          }
+          path="/forgot-password"
         />
         <Route element={<Courses />} path="/courses" />
         <Route element={<CourseDetail />} path="/course/:id" />

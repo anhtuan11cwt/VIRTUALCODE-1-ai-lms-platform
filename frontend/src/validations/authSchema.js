@@ -95,3 +95,38 @@ export const loginSchema = z.object({
     .string({ required_error: "Vui lòng nhập mật khẩu" })
     .min(1, "Vui lòng nhập mật khẩu"),
 });
+
+const forgotEmailSchema = z
+  .string({ required_error: "Vui lòng nhập email" })
+  .trim()
+  .toLowerCase()
+  .email("Vui lòng nhập địa chỉ email hợp lệ");
+
+export const forgotPasswordEmailSchema = z.object({
+  email: forgotEmailSchema,
+});
+
+export const forgotPasswordOTPSchema = z.object({
+  otp: z
+    .string({ required_error: "Vui lòng nhập mã OTP" })
+    .length(6, "OTP phải có 6 chữ số"),
+});
+
+export const forgotPasswordResetSchema = z
+  .object({
+    confirmPassword: z.string({
+      required_error: "Vui lòng xác nhận mật khẩu",
+    }),
+    password: z
+      .string({ required_error: "Vui lòng nhập mật khẩu mới" })
+      .min(8, "Mật khẩu phải có ít nhất 8 ký tự"),
+  })
+  .superRefine(({ password, confirmPassword }, ctx) => {
+    if (password !== confirmPassword) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Mật khẩu không khớp",
+        path: ["confirmPassword"],
+      });
+    }
+  });
