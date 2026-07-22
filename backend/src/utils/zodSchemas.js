@@ -127,6 +127,26 @@ export const createCourseSchema = z.object({
     .max(200, "Tiêu đề không được quá 200 ký tự"),
 });
 
+const lectureTitleSchema = z
+  .string({ required_error: "Tiêu đề bài học là bắt buộc" })
+  .trim()
+  .min(1, "Tiêu đề bài học là bắt buộc")
+  .max(200, "Tiêu đề bài học không được quá 200 ký tự");
+
+export const createLectureSchema = z.object({
+  lectureTitle: lectureTitleSchema,
+});
+
+export const editLectureSchema = z.object({
+  isPreviewFree: z
+    .union([
+      z.boolean(),
+      z.string().transform((v) => v === "true" || v === "1"),
+    ])
+    .optional(),
+  lectureTitle: lectureTitleSchema.optional(),
+});
+
 export const editCourseSchema = z.object({
   category: courseCategoryEnum.optional(),
   description: z.string().trim().optional(),

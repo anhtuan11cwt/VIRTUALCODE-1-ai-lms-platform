@@ -16,6 +16,12 @@ const courseSchema = new mongoose.Schema(
       default: "",
       type: String,
     },
+    lectures: [
+      {
+        ref: "Lecture",
+        type: mongoose.Schema.Types.ObjectId,
+      },
+    ],
     level: {
       default: "Beginner",
       enum: ["Beginner", "Intermediate", "Advanced"],
