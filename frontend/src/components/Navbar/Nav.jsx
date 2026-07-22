@@ -1,4 +1,11 @@
-import { BookOpen, LayoutDashboard, LogIn, Menu, UserPlus } from "lucide-react";
+import {
+  BookOpen,
+  LayoutDashboard,
+  LogIn,
+  Menu,
+  Search,
+  UserPlus,
+} from "lucide-react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
@@ -34,6 +41,12 @@ const Nav = ({ isChecking }) => {
               </NavLink>
               <NavLink className={linkClass} to="/courses">
                 Khóa học
+              </NavLink>
+              <NavLink className={linkClass} to="/search">
+                <span className="flex items-center gap-1.5">
+                  <Search size={16} />
+                  Tìm kiếm AI
+                </span>
               </NavLink>
               <NavLink className={linkClass} to="/about">
                 Giới thiệu

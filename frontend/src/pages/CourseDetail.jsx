@@ -29,6 +29,9 @@ const CourseDetail = () => {
   const [loading, setLoading] = useState(true);
   const [locallyEnrolled, setLocallyEnrolled] = useState(false);
   const [enrolling, setEnrolling] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [reviewForm, setReviewForm] = useState({ comment: "", rating: 5 });
+  const [submittingReview, setSubmittingReview] = useState(false);
 
   // isEnrolled = Redux data (ưu tiên) HOẶC trạng thái local sau khi thanh toán
   const enrolledFromRedux = userData?.enrolledCourses?.includes(id) ?? false;
@@ -58,6 +61,9 @@ const CourseDetail = () => {
             (oc) => oc.creator?._id === c.creator?._id && oc._id !== c._id,
           ),
         );
+
+        const reviewRes = await api.get(`/review/course/${id}`);
+        setReviews(reviewRes.data.reviews);
       } catch {
         setCourse(null);
       } finally {
@@ -424,6 +430,127 @@ const CourseDetail = () => {
             </div>
           </div>
         )}
+
+        <div className="mt-12 rounded-2xl border border-gray-100 bg-white p-8 shadow-sm">
+          <h2 className="font-bold text-gray-900 text-xl">
+            Đánh giá ({reviews.length})
+          </h2>
+
+          {isEnrolled && (
+            <form
+              className="mt-6 rounded-xl border border-gray-100 bg-gray-50 p-5"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setSubmittingReview(true);
+                try {
+                  const { data } = await api.post("/review/create", {
+                    comment: reviewForm.comment,
+                    courseId: id,
+                    rating: reviewForm.rating,
+                  });
+                  setReviews((prev) => [data.review, ...prev]);
+                  setReviewForm({ comment: "", rating: 5 });
+                  toast.success("Đánh giá thành công");
+                } catch (err) {
+                  toast.error(
+                    err.response?.data?.message || "Đánh giá thất bại",
+                  );
+                } finally {
+                  setSubmittingReview(false);
+                }
+              }}
+            >
+              <p className="mb-3 font-medium text-gray-900">Đánh giá của bạn</p>
+              <div className="mb-3 flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    className="cursor-pointer"
+                    key={star}
+                    onClick={() =>
+                      setReviewForm((p) => ({ ...p, rating: star }))
+                    }
+                    type="button"
+                  >
+                    <Star
+                      className={
+                        star <= reviewForm.rating
+                          ? "fill-amber-400 text-amber-400"
+                          : "text-gray-300"
+                      }
+                      size={22}
+                    />
+                  </button>
+                ))}
+              </div>
+              <textarea
+                className="w-full resize-none rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) =>
+                  setReviewForm((p) => ({ ...p, comment: e.target.value }))
+                }
+                placeholder="Chia sẻ trải nghiệm của bạn..."
+                rows={3}
+                value={reviewForm.comment}
+              />
+              <button
+                className="mt-3 cursor-pointer rounded-lg bg-blue-600 px-5 py-2 font-semibold text-sm text-white transition hover:bg-blue-700 disabled:opacity-50"
+                disabled={submittingReview || !reviewForm.comment.trim()}
+                type="submit"
+              >
+                {submittingReview ? "Đang gửi..." : "Gửi đánh giá"}
+              </button>
+            </form>
+          )}
+
+          <div className="mt-6 space-y-4">
+            {reviews.length === 0 ? (
+              <p className="py-6 text-center text-gray-400 text-sm">
+                Chưa có đánh giá nào
+              </p>
+            ) : (
+              reviews.map((review) => (
+                <div
+                  className="flex gap-4 rounded-xl border border-gray-100 p-4"
+                  key={review._id}
+                >
+                  {review.user?.photoUrl ? (
+                    <img
+                      alt=""
+                      className="h-10 w-10 shrink-0 rounded-full object-cover"
+                      src={review.user.photoUrl}
+                    />
+                  ) : (
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 font-bold text-sm text-white">
+                      {(review.user?.name || "U").charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-gray-900">
+                      {review.user?.name || "Ẩn danh"}
+                    </p>
+                    <div className="mt-0.5 flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          className={
+                            star <= review.rating
+                              ? "fill-amber-400 text-amber-400"
+                              : "text-gray-200"
+                          }
+                          key={star}
+                          size={14}
+                        />
+                      ))}
+                    </div>
+                    {review.comment && (
+                      <p className="mt-1.5 text-gray-600 text-sm">
+                        {review.comment}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
 
         {otherCourses.length > 0 && (
           <div className="mt-12">

@@ -23,6 +23,7 @@ import MyEnrolledCourses from "./pages/MyEnrolledCourses";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import Register from "./pages/Register";
+import SearchWithAi from "./pages/SearchWithAi";
 import ViewLectures from "./pages/ViewLectures";
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
           path="/forgot-password"
         />
         <Route element={<Courses />} path="/courses" />
+        <Route element={<SearchWithAi />} path="/search" />
         <Route
           element={
             <ProtectedRoute isChecking={isChecking}>

@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   LogIn,
   LogOut,
+  Search,
   UserPlus,
   X,
 } from "lucide-react";
@@ -82,6 +83,10 @@ const MobileMenu = ({ isOpen, onClose }) => {
           </NavLink>
           <NavLink className={linkClass} onClick={onClose} to="/courses">
             Khóa học
+          </NavLink>
+          <NavLink className={linkClass} onClick={onClose} to="/search">
+            <Search size={18} />
+            Tìm kiếm AI
           </NavLink>
           <NavLink className={linkClass} onClick={onClose} to="/about">
             Giới thiệu
